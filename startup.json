@@ -1,0 +1,16 @@
+{
+    "platform":{
+        "name":"GS",
+        "url":"play.kgame63.com"
+    },
+    "users":{
+        "username_prefix":"mjtest",
+        "start":2000,
+        "end":2000,
+        "password":"123456"
+    },
+    "games":[
+        {"appid":"241d7b34d61b3aea4eb0e3a91d753ecb","name":"mahjong"}
+        ],
+    "games-open":["241d7b34d61b3aea4eb0e3a91d753ecb"]
+}

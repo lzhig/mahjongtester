@@ -1,0 +1,86 @@
+// Copyright (c) 2015, Not Lotill Co.Ltd.
+// All rights who cares.
+//
+// Author:Ray
+// Created: 2015/08/03
+// Version: 1.0
+
+
+
+package lotill.t3.message;
+
+message test_one
+{
+	optional int32 result = 1;			//test
+}
+
+enum Status
+{
+	ANTE_STATUS = 1;
+	FLOP_STATUS = 2;
+	RIVER_STATUS = 3;
+	TURN_STATUS = 4;
+}
+
+message ChipsProto
+{
+	optional int32 virtual_chips = 1;					//虚拟币
+	optional int32 cash = 2;							//现金
+	optional int32 virtual_cash =3;						//拟码
+}
+
+message Liquadtion
+{
+	optional int32 ante = 1;										//所有赔付 非现金即虚拟币
+	optional int32 flop = 2;
+	optional int32 turn = 3;
+	optional int32 river = 4;
+	optional int32 bonus_get = 5;
+	optional int32 bonus_type = 6;
+	optional int32 jackpot_type = 7;
+	optional int32 jackpot_factor = 8; //factor为0，则为固定赔付
+	optional int32 jackpot_amount = 9;
+}
+
+
+message AnteData
+{
+	optional string player_id = 1;				//平台UIN
+	optional int32 seat_id = 2;					//座位号
+	optional int32 currency = 3;				//游戏货币类型     1 - coin |  2 - cash
+	repeated ChipsProto bet = 4;					//Ante阶段下注     Array(ante,jackpot,bonus)
+	optional ChipsProto chip_left = 5;			//剩余筹码
+}
+
+message StatusData
+{
+	optional int32 player_id = 1;			//平台UIN
+	optional int32 seat_id = 2;				//座位号
+	optional int32 currency = 3;			//游戏货币类型     1 - coin |  2 - cash
+	optional ChipsProto bet = 4;					//下注金额
+	repeated int32 hand = 5;		//手牌
+	optional int32 status = 6;				//牌局阶段
+}
+message CaculatePlayer
+{
+	optional string player_id = 1;			//平台UIN
+	optional int32 seat_id = 2;				//座位号
+	optional int32 round_id = 3;			//局号
+	repeated int32 nuts = 4;				//成牌
+	optional int32 win = 5;					//0 lost 1 win
+	optional Liquadtion liquadte = 6;				//清算
+}
+
+message BankerData
+{
+	repeated int32 hand = 1;				//庄家手牌
+	repeated int32 common = 2;				//公牌
+	optional int32 status = 3;				//牌局阶段
+}
+
+message CaculateData
+{
+	repeated CaculatePlayer caculate_player = 1;			//玩家数据
+}
+
+

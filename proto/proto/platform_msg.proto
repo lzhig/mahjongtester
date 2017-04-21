@@ -1,0 +1,36 @@
+// Copyright (c) 2013,  Lotill Co.Ltd.
+// All rights reserved.
+//
+// Author:Ray
+// Created: 2014/04/05
+// Version: 1.0
+
+package lotill.t3.message;
+
+import "platform.proto";
+
+enum CodeID
+{
+	CODEID_TEST_ONE = 1;				//test
+	CODEID_STATUS_DATA = 2;			//游戏每阶段数据
+	CODEID_CACULATE_DATA = 3;		//结算
+	CODEID_ANTE_DATA = 4;			//ante数据
+	CODEID_BANKER_DATA = 5;			//庄家数据
+	
+}
+
+message PlatformMsg
+{
+	required int32 msgid = 1;			//消息ID
+	optional string app_id = 2;			//游戏ID
+	optional int64 round_id = 3;		//局号
+	optional int64 timestamp = 4;		//时间戳
+	optional int32 room_id = 5;			//房间ID
+
+	optional test_one test = 10;					//消息体
+	optional AnteData ante_data = 11;				//ante的记录内容
+	optional StatusData status_data = 12;			//每个阶段的记录
+	optional CaculateData caculate_data = 13;		//清算
+	optional BankerData	banker_data = 14;			//庄家数据
+	
+}

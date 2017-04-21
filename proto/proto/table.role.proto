@@ -1,0 +1,71 @@
+// Copyright (c) 2013,  Lotill Co.Ltd.
+// All rights reserved.
+//
+// Author: Reve Zhang 
+// Created: 2013/04/05
+// Version: 1.0
+
+package lotill.t3.message;
+
+import "sql_options.proto";
+import "common.proto";
+
+enum Available
+{
+	AVAILABLE_NORMAL = 1;  //正常状态
+	AVAILABLE_BAN = 2;     //禁言
+	AVAILABLE_CLOSE = 3;   //封号
+	AVAILABLE_DELETE = 4;   //删号
+}
+
+enum Macros
+{
+	MAX_NAME_LEN = 64;	    //名字长度
+	MAX_ACCOUNT_LEN = 32;  //账号长度
+}
+
+//角色扩展信息
+message DBRoleInfoExtend
+{
+	repeated Item	bag = 1;						//背包
+	repeated int32  title_list = 2;	                //获得称号
+	repeated int32  buff_list = 3;					//buff
+	optional int32	camp = 4;                     //阵营
+	repeated TaskInfo   task_list = 6;					//任务列表
+	optional int32    task_finished_num = 7;			//任务完成数
+	optional uint32	 last_update_hp_time = 8;			//首次体力不足上限的时间
+	optional int32 guest = 10;							//0正常1游客
+	repeated int32 finished_task_list = 11;				//完成任务列表
+	optional int32 task_refresh_times = 12;				 //任务刷新次数
+	
+	
+}
+
+
+//玩家角色，不需要用sql语句操作（主要指运营修改和统计）的字段统一存放在角色扩展信息
+//便于利用protobuf自动升级
+//注意：目前protobuf sql插件未支持repeated标签处理，不要用repeated定义；使用INNODB，嵌套消息定义不要超过10个。
+message DBRoleInfo
+{
+	option (stMsgOptions) = {bTable : true strPrimaryKey : "account, platform" strUniqueIndex : "uin" i32SplitTableFactor : 4 strEngine : "INNODB"};
+	
+	optional uint32 uin = 1 [(stFieldOptions) = {bNotNull : true}];					//角色ID
+	optional string account = 2 [(stFieldOptions) = {bNotNull : true uStrSize : 32}];		//账号
+	optional int32  platform = 3 [(stFieldOptions) = {bNotNull : true}];				//平台
+	optional string name = 4 [(stFieldOptions) = {bNotNull : true uStrSize : 64}];			//名字
+	optional int32  gender = 5 [(stFieldOptions) = {bNotNull : true}];				//性别
+	optional int32  exp = 6 [(stFieldOptions) = {bNotNull : true}];					//经验
+	optional int32  level = 7 [(stFieldOptions) = {bNotNull : true}];				//等级
+	optional int32  hp = 8 [(stFieldOptions) = {bNotNull : true}];					//等体力
+	optional int32	avatar = 9 [(stFieldOptions) = {bNotNull : true}];				//avatar
+	optional int32  mission_id = 10 [(stFieldOptions) = {bNotNull : true}];			//当前关卡id
+	optional int32  task_id	   =  11 [(stFieldOptions) = {bNotNull : true}];		//当前任务id
+	optional uint32 create_time = 12 [(stFieldOptions) = {bNotNull : true}];				//创建时间
+	optional uint32 last_login_time = 13 [(stFieldOptions) = {bNotNull : true}];			//最近登录时间
+	optional uint32 last_Logout_time = 14 [(stFieldOptions) = {bNotNull : true}];			//最近登出时间
+	optional uint32 available = 15 [(stFieldOptions) = {bNotNull : true}];				//账号可以用性，封号，禁言等
+	optional uint32 gold = 16 [(stFieldOptions) = {bNotNull : true}];						 //金币 RMB
+	optional uint32 silver = 17 [(stFieldOptions) = {bNotNull : true}];						 //银币
+	//预留字段
+	optional DBRoleInfoExtend extend = 30;								//角色扩展
+}

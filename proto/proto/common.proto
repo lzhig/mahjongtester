@@ -1,0 +1,209 @@
+
+//
+// Author: Ray Odierno
+// Created: 2014/06/27
+// Version: 1.0
+
+package lotill.t3.message;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//角色相关定义
+enum Gender
+{
+	FEMAN = 0;
+	MAN = 1;
+}
+enum PlayerAction
+{
+	LOGIN = 0;
+	LOGOUT = 1;
+}
+
+enum ChoiceType
+{
+	CHI = 0;
+	PENG = 1;
+	GANG = 3;
+	ANGANGBO = 4;
+	HU = 5;
+	ZHUA = 6;
+	DA = 7;
+	BUHUA = 8;
+	READY = 9;
+	PASS = 10;
+	PENGGANG = 11;
+}
+
+message MahjongDef
+{
+	optional int32 type = 1;				//花面
+	optional int32 value = 2;				//花值
+	optional int32 mj_index = 3;			//牌墙索引
+}
+
+//物品
+message Item
+{
+	optional int32	id = 1;						//物品id
+	optional int32 num = 3;						//物品数量
+	optional uint32 config_id = 4;				//物品配置id
+	optional string script = 5;					//物品配置脚本
+}
+
+message Collection
+{
+	optional int32 id = 1;						//收集的物品ID
+	optional int32 num = 2;						//收集物品的数量
+}
+
+//发送给客户端角色信息
+message RoleInfo
+{
+	optional uint32 uin = 1;					//角色ID
+	
+	optional string name = 2;					//名字
+	optional int32  gender = 3;					//性别
+	optional int32  exp = 4;					//经验
+	optional int32  level = 5;					//等级
+	optional int32	avatar = 6;					//avatar
+	optional int32  mission_id = 7;				//关卡id
+	optional int32  tast_id = 8;					//任务id
+	optional uint32 create_time = 9;				//创建时间
+	optional uint32 last_login_time = 10;			//最近登录时间
+	optional uint32 last_Logout_time = 11;			//最近登出时间
+	optional int32  gold = 12;						//金币
+	optional int32  silver = 13;					//银币
+	optional int32	hp = 14;						//体力
+	optional string account = 15;					//账号
+	
+}
+
+message ErrorCodeNotify
+{
+	optional uint32 error_code = 1;
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//任务
+
+message TaskInfo
+{
+	optional int32 task_id = 1;							//任务ID
+	repeated Collection collection = 2;					//物品目标计数
+	repeated int32 target_count = 3;					//单纯计数目标
+	optional int32 specflag = 4;					        //特殊任务标志
+}
+
+
+
+////////////////////////房间信息/////////////////////////
+
+
+message PlayerState
+{
+	optional int32 state = 1;							//玩家状态
+	optional int32 location = 2;						//东西南北
+	optional string name = 3;							//玩家name
+	optional string head_icon = 4;						//头像id
+	optional int32 gold = 5;							//玩家身上货币
+}
+
+message RoomState
+{
+	optional int32 ante = 1;
+	optional int32 room_id = 2;
+	repeated PlayerState player_state = 3;							//玩家信息
+}
+
+
+
+message RoomList
+{
+	optional int32 room_id = 1;						//房间ID
+	optional int32 gamer_num = 2;					//房间可容纳人数
+	optional int32 room_type = 3;					//房间类型
+}
+
+message RoomDetail
+{
+	repeated MahjongDef hand_wall = 1;				//手牌
+	repeated HandWall kick_wall = 2;				//打出去的牌
+	repeated HandWall chi_wall = 3;					//吃的牌
+	repeated HandWall peng_wall = 4;				//碰的牌
+	repeated HandWall gang_wall = 5;				//杠
+	repeated HandWall an_gang_wall = 6;				//暗杠
+	repeated HandWall hua_wall = 7;					//花
+	repeated PlayerChoiceQueue choice_type = 8;			//玩家操作序列
+	optional int32 oppsite_handwall_num = 9;		//对手手牌数
+	optional int32 wall_left = 10;					//剩余牌墙数
+	optional int32 banker = 11;						//庄家方位
+	optional int64 over_time_stamp = 12;			//超时时间戳
+	optional int32 action_location = 13;			//行动者
+
+}
+
+message OtherPlayerInfo
+{
+	optional int32 seate_location = 1;					//座位
+	optional int32 hand_wall = 2;						//手牌剩余
+	optional int32 gold = 3;
+	repeated MahjongDef hua = 4;						//花牌
+}
+
+message HandWall
+{
+	optional int32 seat_location = 1;					//座位
+	repeated MahjongDef mj = 2;							//手牌
+}
+
+message PlayerChoiceQueue
+{
+	optional int32 seat_location = 1;					//位置
+	repeated ChoiceType choice_type = 2;				//操作队列
+}
+
+message Fanxing
+{
+	optional int32 fanxing = 1;							//番型
+	optional int32 fan_num = 2;							//多少番
+}
+
+message RankInfo
+{
+	optional string name = 1;
+	optional int32 score = 2;
+	
+}
+
+message MatchResult
+{
+	optional int32 uid = 1;
+	optional int32 rank = 2;
+}
+
+message Notice
+{
+	optional int32 id = 1;
+	optional int64 start_time = 2;
+	optional int64 end_time = 3;
+	optional string content = 4;
+	optional int32 inter_time = 5;
+	optional int32 speed = 6;
+	optional int32 player_count = 7;
+}
+
+message RoomMinState
+{
+	optional int32 room_id = 1;
+	repeated PlayerRoomMinState player_room_min_state = 2;							//玩家信息
+}
+
+message PlayerRoomMinState
+{
+	optional uint32 uin = 1;							//角色ID
+	optional int32 state = 2;							//玩家状态
+	optional string name = 3;							//玩家account
+	optional string account = 4;						//玩家name
+}

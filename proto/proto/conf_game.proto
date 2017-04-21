@@ -1,0 +1,134 @@
+
+
+
+syntax = "proto2";
+package lotill.t3.message;
+
+////////////////////////////////////////////////////////////
+message DirtyWord {
+    optional string word = 1; // 过滤词
+}
+
+////////////////////////////////////////////////////////////
+message Scope {
+    optional uint32 min = 1; //下限
+    optional uint32 max = 2; //上限
+}
+
+message Scope64 {
+    optional uint64 min = 1; //下限
+    optional uint64 max = 2; //上限
+}
+
+////////////////////////////////////////////////////////////
+enum ENMoneyType {
+    MONEY_TYPE_CASH = 1; // 现金
+    MONEY_TYPE_COIN = 2; // 虚拟币
+    MONEY_TYPE_NM   = 3; // 拟码
+}
+
+////////////////////////////////////////////////////////////
+message Integer2DTable {
+    repeated uint64 fields = 1;
+}
+
+message String2DTable {
+    repeated string fields = 1;
+}
+
+message Double2DTable {
+    repeated double fields = 1;
+}
+
+
+message Hall
+{
+	optional int32 m_key = 1;				// 等级ID
+	optional int32 max_room = 2;			// 最大房间数
+	optional int32 currency_type = 3;		// 货币类型
+	optional int32 active_robot = 4;		//常驻机器人
+}
+
+
+message Table
+{
+	optional int32 m_key = 1;				// 房间ID
+	
+	optional int32 currency = 2;			// 货币类型
+	optional int32 ante = 3;				// 底注
+	optional int32 grade = 4;				// 等级
+	optional int32 max_player = 5;			// 最大玩家数
+	optional int32 max_odds = 6;			// 最大注额
+	optional int32 min_takein = 7;			// 最小带入
+	optional int32 max_room = 8;			// 最大房间数
+	optional int32 robot_avilible = 9;		//是否有机器人
+	optional string ante_des = 10;			//底注描述信息
+}
+
+message FanType
+{
+	optional int32 m_key = 1;				//番型ID
+	optional string fanxing = 2;			//番型表述
+	optional int32 fan = 3;					//番型大小
+}
+
+message Activity
+{
+	optional int32 m_key = 1;				//活动ID
+	optional string start_time = 2;			//开始时间
+	optional string end_time = 3;			//结束时间
+}
+
+message Robot
+{
+	optional int32 m_key = 1;				//机器人ID
+	optional int32 grade = 2;				//负责大厅
+	optional string work_time = 3;			//上班时间
+	optional string off_time = 4;			//下班时间
+	optional string account = 5;			//账户
+	optional string name = 6;				//昵称
+	optional string icon = 7;				//头像
+	optional string gender = 8;				//性别
+	optional int32 bank = 9;				//初始账户
+
+}
+
+message Game
+{
+	repeated Table table = 1;
+	repeated Hall hall = 2;
+	repeated FanType fan_type = 3;
+	repeated Match match = 4;
+	repeated Activity activity = 5;
+	repeated Robot robot = 6;
+	repeated Mail mail = 7;
+	repeated Words words = 8;
+}
+
+message Match
+{
+	optional int32 m_key = 1;				//比赛ID
+	optional string start_time = 2;			//开始时间
+	optional string last_time = 3;			//持续时间
+	optional int32 amount = 4;				//报名费
+	optional string currency_type = 5;		//货币类型
+	optional int32 round_num = 6;			//打多少局
+	optional int32 reward = 7;				//奖励
+}
+
+message Mail
+{
+	optional int32 m_key = 1;				//邮件ID
+	optional int32 type = 2;				//邮件类型
+	optional int32 platform_type = 3;		//平台邮件类型
+	optional string title = 4;				//标题
+	optional string sender = 5;				//发送者
+	optional string content = 6;			//邮件内容
+}
+
+message Words
+{
+	optional int32 m_key = 1;				//词汇ID
+	optional string index = 2;				//词汇索引
+	optional string chinese = 3;			//对应中文
+}

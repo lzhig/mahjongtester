@@ -1,0 +1,304 @@
+// Copyright (c) 2015,  Lotill Co.Ltd.
+// All rights reserved.
+//
+// Author: Ray  
+// Created: 2015/04/05
+// Version: 2.0
+
+package lotill.t3.message;
+
+import "table.role.proto";
+import "common.proto";
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//踢人
+
+//踢人原因
+enum KickRoleResean
+{
+	KICKROLE_FOR_LOGIN = 0;
+	KICKROLE_FOR_LOGOUT= 1;
+}
+
+//踢人请求
+message KickRoleRequest
+{
+	optional uint32	uin = 1;		//角色ID
+	optional KickRoleResean  reason = 2;		//登出原因，0登录踢人
+	optional uint32	appid = 3;		//请求踢人app服务器ID
+}
+
+//踢人响应
+message KickRoleResponse
+{
+	optional int32 result = 1;		//结果，0表示成功，其他出错
+	optional uint32	uin = 2;		//角色ID
+	optional KickRoleResean  reason = 3;		//登出原因
+	optional uint32	appid = 4;		//请求踢人app服务器ID
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//数据拉取、更新
+
+//拉取原因
+enum FetchRoleResean
+{
+	FETCHROLE_FOR_LOGIN = 0;
+	FETCHROLE_FOR_DATA = 1;
+}
+
+//拉取角色请求
+message FetchRoleRequest
+{
+	optional uint32				uin = 1;		//角色ID
+	optional FetchRoleResean	reason = 2;		//拉取角色原因, 0登录拉去数据
+}
+
+//拉取角色响应
+message FetchRoleResponse
+{
+	optional int32				result = 1;			//结果，0表示成功，其他出错
+	optional FetchRoleResean	reason = 2;			//拉取角色原因
+	optional DBRoleInfo			roleinfo = 3;		//数据库角色信息
+}
+
+//更新原因
+enum UpdateRoleResean
+{
+	UPDATEROLE_ON_TICK = 0;
+	UPDATEROLE_ON_LOGOUT = 1;
+	UPDATEROLE_ON_USER = 2;
+}
+
+//更新角色数据通知
+message UpdateRoleNotify
+{
+	optional int32	reason = 1;			//更新角色原因
+	optional DBRoleInfo	roleinfo = 2;	//数据库角色信息
+}
+
+message UpdateAppPortNotify
+{
+	optional string ip = 1;		//app服务器IP
+	optional int32 port = 2;	//app服务器端口
+	optional int32  playerNum = 3; 		//服务器人数
+	optional int32	appid	= 4;	//app服务器id
+}
+
+message LoginVerifyResponse
+{
+	optional int32 result = 1;				//0验证成功-1失败
+}
+
+////////////////////////////Oss日志统计////////////////////////////
+
+message LoginInfoNotify
+{
+	optional int32 uin = 1;						//uin
+	optional uint32 logintime = 2;				//登录时间
+}
+
+message UpdateRoomNotify
+{
+	optional uint32 table_id = 1;				//房间id
+	optional uint32 uin = 2;					//uin为0就干掉整个room，不为0就干掉这个玩家
+	optional int32 type = 3;					//0 进人 1 出人
+	optional int32 room_type = 4;					//房间类型
+}
+
+message UploadRoomNotify
+{
+	repeated RoomList room_list = 1;						//房间列表
+}
+
+message TakeOutAmountRequest
+{
+}
+
+message TakeOutAmountResponse
+{
+	optional string currency = 1;
+	optional string amount = 2;
+}
+
+message RobotLoginRequest
+{
+	optional int32 room_id = 1;				//room_id
+}
+
+message RobotLoginResponse
+{
+	optional int32 result = 1;				//0 成功
+	optional int32 room_id = 2;				//room_id
+	optional int32 uid = 3;					//uid
+	optional string head_coin = 4;			//头像
+	optional string name = 5;				//名字
+}
+
+message RobotTakeInRequest
+{
+	optional string uid = 1;
+	optional string currency = 2;
+	optional string amount = 3;
+	optional string app_id = 4;
+}
+
+message RobotTakeInResponse
+{
+	optional int32 uid = 1;
+	optional int32 room_id = 2;
+	optional int32 amount = 3;
+	optional int32 left = 4;
+	optional int32 currency_type = 5;
+	optional int32 result = 6;
+	
+}
+
+message RobotTakeOutNotify
+{
+	optional string uid = 1;
+	optional string currency = 2;
+	optional string amount = 3;
+	optional string app_id = 4;
+}
+
+message PlayerStatusNotify
+{
+	optional int32 uin = 1;					//uin
+	optional int32 room_id = 2;				//房间id
+	optional int32 status = 3;				//玩家状态
+	optional int32 seat_location = 4;		//座位
+}
+
+message StopServerNotify
+{
+	optional int32 data = 1;					//0 关服 1 停服
+}
+
+message RobotOpenTableNotify
+{
+	optional int32 room_id = 1;
+	optional int32 seate_location = 2;
+	optional int32 ante_type = 3;
+	optional string head_icon = 4;
+	optional string name = 5;
+	optional string uid = 6;
+}
+
+///////////////////////////////////////////////////////////////
+//排行榜
+message UpdateRankNotify
+{
+	optional int32 uin = 1;					//uin
+	optional int32 score = 2;				//分数
+}
+
+message SelectRankInfoRequest
+{
+	optional int32 uin = 1;					//uin
+}
+
+message SelectRankInfoResponse
+{
+	repeated RankInfo rank_info = 1;				//排行榜
+}
+
+message DropRankNotify
+{
+	
+}
+
+message QueryRankRequest
+{
+	optional int32 uin = 1;							//uin
+}
+
+message QueryRankResponse
+{
+	optional int32 uin = 1;
+	optional int32 rank = 2;						//排名
+}
+
+
+
+message UploadMatchResult
+{
+	optional string app_id = 1;						//appid
+	optional int32 match_id = 2;					//比赛ID
+	optional string match_name = 3;
+	optional string match_type = 4;                  //match_type为MTT/SNG
+	optional int32 match_state = 5;			//到时候这里只会有一种状态，即“已结束”
+	optional int64 start_time = 6;
+	optional int64 end_time = 7;
+	optional string recycle_type = 8 [default = "none"];
+	optional string currency = 9;
+	optional int32 player_num = 10;
+	optional int32 sum_entry_fees = 11;
+	optional int32 entry_item = 12;
+	optional int32 sum_items = 13;
+	optional int32 sum_service_fees = 14;
+	optional int32 rebuy = 15;
+	optional int32 addon = 16;
+	optional int32 blind_level = 17;
+	optional int32 prize_pool = 18;
+	optional int32 money_cycle_num = 19;    
+	optional int32 need_check_award = 20;
+	repeated MatchResult results = 21;
+}
+
+message RoomDef
+{
+	optional int32 room_type = 1;
+	optional int32 min_ante = 2;
+	optional int32 max_ante = 3;
+}
+
+message RoomInfoDef
+{
+	optional int32 room_id = 1;
+	optional int32 max_count = 2[default = 2];
+	optional int32 cur_count = 3;
+}
+
+message RoomListHttpRequest
+{
+	optional string oper_type = 1;
+	optional string currency = 2;
+}
+
+message RoomListHttpRespnse
+{
+	optional string oper_type = 1 [default = "RoomList"];
+	optional string currency = 2;
+	repeated RoomDef Room = 3; 			
+}
+
+message TableHttpRequest
+{
+	optional string oper_type = 1;
+	optional int32 room_type = 2;
+}
+
+message TableHttpResponse
+{
+	optional string oper_type = 1 [default = "RoomInfo"];
+	optional int32 room_type = 2;
+	repeated RoomInfoDef RoomInfo = 3;
+}
+
+///////////////////////////////////////////////////////////////
+//房间信息同步
+
+message RoomListSynchronizeRequest
+{
+	repeated RoomMinState room_min_state = 1;					//大厅房间最简状况
+}
+
+message OfflineCashingNotify
+{
+	optional int32 uid = 1;										//玩家uid
+	optional int64 time = 2;									//结算时间uinx时间戳
+	optional string round_id = 3;								//牌局id
+	optional int32 currency = 4;								//货币种类
+	optional int32 sum = 5;										//结算金额
+}

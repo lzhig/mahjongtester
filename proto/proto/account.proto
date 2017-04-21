@@ -1,0 +1,45 @@
+// Copyright (c) 2013,  Lotill Co.Ltd.
+// All rights reserved.
+//
+// Author: Reve Zhang ,Ray
+// Created: 2013/04/05
+// Version: 1.0
+
+package lotill.t3.message;
+
+
+message ListRoleRequest
+{
+	optional bytes	token = 1;		//登录token	
+	optional string name = 2;		//平台名字与游戏名字暂时无关		
+}
+
+message ListRoleResponse
+{
+	optional int32  result = 1;		//结果, 0成功，其他失败
+	optional string	appip = 2;		//app 服务器ip
+	optional int32	port = 3;		//app 服务器端口
+	optional uint32	uin = 4;		//角色id
+	optional string name = 5;		//名字
+	optional int32  gender = 6;		//性别
+	optional int32	avatar = 7;		//avatar
+}
+
+message CreateRoleRequest
+{
+	optional int32  gender = 1;		//性别
+	optional int32	avatar = 2;		//avatar
+	optional string name = 3;		//名字
+	
+}
+
+message CreateRoleResponse
+{
+	optional int32  result = 1;		//结果, 0成功，其他失败
+	optional string name = 2;		//名字
+	optional string ip = 3;
+	optional int32 port = 4;
+	optional uint32 uin = 5;
+	optional int32 guest = 6;
+}
+

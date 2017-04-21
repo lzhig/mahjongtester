@@ -1,0 +1,1497 @@
+// Copyright (c) 2013,  Lotill Co.Ltd.
+// All rights reserved.
+//
+// Author:Ray
+// Created: 2014/04/05
+// Version: 1.0
+
+package lotill.t3.message;
+//import "google/protobuf/descriptor.proto";
+message ListRoleRequest
+{
+	optional bytes	token = 1;		//登录token	
+	optional string name = 2;		//平台名字与游戏名字暂时无关		
+}
+
+message ListRoleResponse
+{
+	optional int32  result = 1;		//结果, 0成功，其他失败
+	optional string	appip = 2;		//app 服务器ip
+	optional int32	port = 3;		//app 服务器端口
+	optional uint32	uin = 4;		//角色id
+	optional string name = 5;		//名字
+	optional int32  gender = 6;		//性别
+	optional int32	avatar = 7;		//avatar
+}
+
+message CreateRoleRequest
+{
+	optional int32  gender = 1;		//性别
+	optional int32	avatar = 2;		//avatar
+	optional string name = 3;		//名字
+	
+}
+
+message CreateRoleResponse
+{
+	optional int32  result = 1;		//结果, 0成功，其他失败
+	optional string name = 2;		//名字
+	optional string ip = 3;
+	optional int32 port = 4;
+	optional uint32 uin = 5;
+	optional int32 guest = 6;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//角色相关定义
+enum Gender
+{
+	FEMAN = 0;
+	MAN = 1;
+}
+enum PlayerAction
+{
+	LOGIN = 0;
+	LOGOUT = 1;
+}
+
+enum ChoiceType
+{
+	CHI = 0;
+	PENG = 1;
+	GANG = 3;
+	ANGANGBO = 4;
+	HU = 5;
+	ZHUA = 6;
+	DA = 7;
+	BUHUA = 8;
+	READY = 9;
+	PASS = 10;
+	PENGGANG = 11;
+}
+
+message MahjongDef
+{
+	optional int32 type = 1;				//花面
+	optional int32 value = 2;				//花值
+	optional int32 mj_index = 3;			//牌墙索引
+}
+
+//物品
+message Item
+{
+	optional int32	id = 1;						//物品id
+	optional int32 num = 3;						//物品数量
+	optional uint32 config_id = 4;				//物品配置id
+	optional string script = 5;					//物品配置脚本
+}
+
+message Collection
+{
+	optional int32 id = 1;						//收集的物品ID
+	optional int32 num = 2;						//收集物品的数量
+}
+
+//发送给客户端角色信息
+message RoleInfo
+{
+	optional uint32 uin = 1;					//角色ID
+	
+	optional string name = 2;					//名字
+	optional int32  gender = 3;					//性别
+	optional int32  exp = 4;					//经验
+	optional int32  level = 5;					//等级
+	optional int32	avatar = 6;					//avatar
+	optional int32  mission_id = 7;				//关卡id
+	optional int32  tast_id = 8;					//任务id
+	optional uint32 create_time = 9;				//创建时间
+	optional uint32 last_login_time = 10;			//最近登录时间
+	optional uint32 last_Logout_time = 11;			//最近登出时间
+	optional int32  gold = 12;						//金币
+	optional int32  silver = 13;					//银币
+	optional int32	hp = 14;						//体力
+	optional string account = 15;					//账号
+	
+}
+
+message ErrorCodeNotify
+{
+	optional uint32 error_code = 1;
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//任务
+
+message TaskInfo
+{
+	optional int32 task_id = 1;							//任务ID
+	repeated Collection collection = 2;					//物品目标计数
+	repeated int32 target_count = 3;					//单纯计数目标
+	optional int32 specflag = 4;					        //特殊任务标志
+}
+
+
+
+////////////////////////房间信息/////////////////////////
+
+
+message PlayerState
+{
+	optional int32 state = 1;							//玩家状态
+	optional int32 location = 2;						//东西南北
+	optional string name = 3;							//玩家name
+	optional string head_icon = 4;						//头像id
+	optional int32 gold = 5;							//玩家身上货币
+}
+
+message RoomState
+{
+	optional int32 ante = 1;
+	optional int32 room_id = 2;
+	repeated PlayerState player_state = 3;							//玩家信息
+}
+
+
+
+message RoomList
+{
+	optional int32 room_id = 1;						//房间ID
+	optional int32 gamer_num = 2;					//房间可容纳人数
+	optional int32 room_type = 3;					//房间类型
+}
+
+message RoomDetail
+{
+	repeated MahjongDef hand_wall = 1;				//手牌
+	repeated HandWall kick_wall = 2;				//打出去的牌
+	repeated HandWall chi_wall = 3;					//吃的牌
+	repeated HandWall peng_wall = 4;				//碰的牌
+	repeated HandWall gang_wall = 5;				//杠
+	repeated HandWall an_gang_wall = 6;				//暗杠
+	repeated HandWall hua_wall = 7;					//花
+	repeated PlayerChoiceQueue choice_type = 8;			//玩家操作序列
+	optional int32 oppsite_handwall_num = 9;		//对手手牌数
+	optional int32 wall_left = 10;					//剩余牌墙数
+	optional int32 banker = 11;						//庄家方位
+	optional int64 over_time_stamp = 12;			//超时时间戳
+	optional int32 action_location = 13;			//行动者
+
+}
+
+message OtherPlayerInfo
+{
+	optional int32 seate_location = 1;					//座位
+	optional int32 hand_wall = 2;						//手牌剩余
+	optional int32 gold = 3;
+	repeated MahjongDef hua = 4;						//花牌
+}
+
+message HandWall
+{
+	optional int32 seat_location = 1;					//座位
+	repeated MahjongDef mj = 2;							//手牌
+}
+
+message PlayerChoiceQueue
+{
+	optional int32 seat_location = 1;					//位置
+	repeated ChoiceType choice_type = 2;				//操作队列
+}
+
+message Fanxing
+{
+	optional int32 fanxing = 1;							//番型
+	optional int32 fan_num = 2;							//多少番
+}
+
+message RankInfo
+{
+	optional string name = 1;
+	optional int32 score = 2;
+	
+}
+
+message MatchResult
+{
+	optional int32 uid = 1;
+	optional int32 rank = 2;
+}
+
+message Notice
+{
+	optional int32 id = 1;
+	optional int64 start_time = 2;
+	optional int64 end_time = 3;
+	optional string content = 4;
+	optional int32 inter_time = 5;
+	optional int32 speed = 6;
+	optional int32 player_count = 7;
+}
+
+message RoomMinState
+{
+	optional int32 room_id = 1;
+	repeated PlayerRoomMinState player_room_min_state = 2;							//玩家信息
+}
+
+message PlayerRoomMinState
+{
+	optional uint32 uin = 1;							//角色ID
+	optional int32 state = 2;							//玩家状态
+	optional string name = 3;							//玩家account
+	optional string account = 4;						//玩家name
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//登录登出相关
+
+//登录请求
+message LoginRequest
+{
+	optional int32	channel = 1;	//登录渠道
+}
+
+//登录响应
+message LoginResponse
+{
+	optional int32 result = 1;			//结果，0表示成功，其他出错
+	optional RoleInfo roleinfo = 2;		//角色信息
+}
+
+//登录通知
+message LoginNotify
+{
+	optional uint32 uin = 1;		//角色ID
+	optional int32  zone = 2;		//登录游戏服务器
+}
+
+//登出原因
+enum LogoutResean
+{
+	LOGOUT_OFFLINE = 0;
+	LOGOUT_KICKROLE_FOR_LOGIN = 1;
+	LOGOUT_STOP_SERVER = 2;
+}
+
+//登出请求
+message LogoutRequest
+{
+	optional LogoutResean  reason = 1;		//登出原因
+}
+
+//登出响应
+message LogoutResponse
+{
+	optional int32 result = 1;				//结果，0表示成功，其他出错
+	optional LogoutResean  reason = 2;		//登出原因
+}
+
+//登出通知
+message LogoutNotify
+{
+	optional int32 result = 1;				//结果，0表示成功，其他出错
+	optional uint32	uin = 2;				//角色ID
+	optional LogoutResean  reason = 3;		//登出原因
+	repeated int32 roomids = 4;				//房间id列表
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+//任务
+
+message RefreshTaskRequest
+{
+	optional int32 task_id = 1;			//任务ID
+}
+
+message RefreshTaskResponse
+{
+	optional int32 task_id = 1;				//任务ID
+}
+
+//完成任务
+message FinishTaskRequest
+{
+	optional int32 task_id = 1;	
+}
+
+message FinishTaskResponse
+{
+	optional int32 task_id = 1;						//完成的任务ID
+	optional int32 new_task_id = 2;					//新接到任务的ID,如果ID为0,则没有后续任务
+	optional int32 tasks_left = 3;                                  //剩余任务次数
+}
+
+message DairlyTaskRefreshNotify
+{
+	optional int32 task_id = 1;						//定时刷每日任务
+}
+
+message UpdateTaskTargetRequest						//请求更新任务列表
+{
+	
+}
+
+message UpdateTaskTargetResponse
+{
+	optional TaskInfo task_info = 1;				//任务信息
+	optional int32 tasks_left = 2;				//今日剩余任务数量
+}
+
+
+
+/////////////////////////////////////////////////房间列表////////////////////////////////////
+message ListRoomRequest
+{
+	optional int32 room_type = 1;		//房间类型
+	optional int32 currency_type = 2;		//货币类型
+}
+
+message ListRoomResponse
+{
+	repeated RoomState room_state = 1;					//大厅房间状况
+}
+
+
+message LoginRoomRequest
+{
+	optional int32 room_id = 1;							//房间id
+	optional int32 seat_location = 2;						//座位方位 东1 南2 西3 北4
+	optional int32 ante_type = 3;								//底注填ID
+}
+
+message LoginRoomResponse
+{
+	optional int32 result = 1;								//大于0 成功 小于0 失败
+	optional int32 room_id = 2;								//登录房间ID
+	optional string port = 3;								//端口
+	optional string ip = 4;								//ip
+	optional int32 ante_type = 5;						//房间ante类型
+
+
+}
+
+enum LogoutRoomReason
+{
+	REASON_REQUEST = 1;								//主动请求登出
+	REASON_BEKICKED = 2;							//踢出房间
+}
+
+message LogoutRoomRequest
+{
+
+}
+
+message LogoutRoomResponse
+{
+	optional int32 result = 1;							//登出房间0成功1失败
+	optional LogoutRoomReason reason = 2;				//登出理由
+}
+
+message LogoutRoomNotify
+{
+	optional int32 seat_location = 1;
+}
+
+////////////////////////////////////////////游戏/////////////////////
+
+message LoginFightRequest
+{
+	optional int32 room_id = 1;								//房间ID
+	optional int32 seat_location = 2;						//作为方位
+	
+}
+
+message LoginFightResponse
+{
+	optional int32 result = 1;								//登录是否成功 等于0则不成功
+	optional RoomDetail detail = 2;							//房间细节
+	optional int32 room_id = 3;								//房间ID
+	optional int32 seat_location = 4;						//方位
+	optional int32 ante_type = 5;
+	repeated PlayerState state = 6;
+}
+
+message PlayerReadyRequest									//准备
+{
+	optional int32 ready = 1;								//1准备 2准备完毕
+	repeated MahjongDef mj_wall = 2;						//起始手牌 
+}
+
+message PlayerReadyResponse									//准备
+{
+	optional int32 player_status = 1;						//玩家状态
+	repeated PlayerState state = 2;							//玩家信息
+}
+
+message PlayerChoiceNotify									//玩家动作
+{
+	optional ChoiceType choice_type = 1;					//玩家动作
+	optional int32 wall_left = 2;							//剩余牌数
+	repeated MahjongDef mj = 3;								//桌面成牌
+	optional int32 status = 4;								//玩家状态
+	optional int32 seat_location = 5;
+}
+
+message PlayerChoiceRequest
+{
+	optional ChoiceType choice_type = 1;					
+	repeated MahjongDef mj = 3;								//如果是吃 将吃的牌放进来
+}
+
+message PlayerChoiceResponse
+{
+	optional ChoiceType choice_type = 1;
+	optional int32 result = 2;
+	optional MahjongDef mj = 3;								//补牌，没有为空
+	repeated MahjongDef mj_vec = 4;							//发牌花
+}
+
+message CalculateNotify
+{
+	optional int32 fan = 1;
+	repeated Fanxing fan_xing = 2;
+	optional int32 win_location = 3;
+	optional int32 gold_left = 4;
+	optional MahjongDef hu_mj = 5;
+	repeated HandWall hand_wall = 6;						//对面手牌
+	repeated PlayerState player_state = 7;
+}
+
+message PlayerStateNotify
+{
+	repeated PlayerState state = 1;
+}
+
+/////////////////////////////////////平台相关///////////////////////////
+
+message CashTakeOutRequest
+{
+	
+	optional string	amount = 1;					//带入数量
+	optional string	app_id = 2;					//游戏ID
+	optional string currency = 3;				//货币类型
+	optional string room_id = 4;
+	optional string timestamp = 5;
+	optional string	uid = 6;					//玩家ID
+	optional string app_secret_key = 7;			//app key
+}
+
+message CashTakeOutResponse
+{
+	optional int32 result = 1;					//结果
+	optional string room_id = 2;					//房间id
+	optional int32 uid = 3;						//用户id
+	optional string balance = 4;				//货币数额
+	optional string date = 5;					//时间
+	optional string currency = 6;				//货币类型
+	optional string amount = 7;					//带出数量
+}
+
+message CashTakeInRequest
+{
+	optional string	amount = 1;					//带入数量
+	optional string	app_id = 2;					//游戏ID
+	optional string currency = 3;				//货币类型
+	optional string room_id = 4;
+	optional string token = 5;					//带入token
+	optional string	uid = 6;					//玩家ID
+	optional string app_secret_key = 7;			//app key
+	
+}
+
+message CashTakeInResponse
+{
+	optional int32 result = 1;					//结果
+	optional string room_id = 2;					//房间id
+	optional int32 uid = 3;						//用户id
+	optional uint32 date = 5;					//时间
+	optional string currency = 6;				//货币类型
+	optional string amount = 7;					//带出数量
+	optional string reason = 8;					//原因
+}
+
+
+message PublicNoticeNotify
+{
+	optional Notice Notice = 1;
+}
+
+message DissolveRoomNotify
+{
+	optional int32 room_id = 1;					//房间ID
+}
+
+////////////////////////////////////////////////////////////////////////////
+message ShufferingNotify
+{
+	optional int32 banker = 1;					//庄家的方位
+	optional int32 wall_left = 2;				//剩余牌墙
+	optional uint32 round_id = 3;				//每一局唯一标识
+	repeated MahjongDef mj = 4;					//麻将发牌
+	repeated OtherPlayerInfo other_info = 5;		//花墙
+}
+
+message ShufferingInfoRequest
+{
+	
+}
+
+message ShufferingInfoResponse
+{
+	optional int32 wall_left = 1;				//剩余牌墙
+	repeated OtherPlayerInfo hua_wall = 3;		//花墙
+}
+
+message ActionAllowanceRequest
+{
+	repeated ChoiceType choice_type = 1;				//吃差杠胡
+}
+
+message ActionAllowanceResponse
+{
+	optional int32 result = 1;
+}
+
+message HeartBeatRequest						//心跳
+{
+
+}
+
+message HeartBeatResponse					//跳TM的
+{
+
+}
+
+message PlayerLoginNotify
+{
+	optional int32 operation = 1;				//0登入，1登出
+	optional PlayerState stat = 2;				//玩家状态
+}
+
+message QuickLoginRequest
+{
+	optional int32 grade = 1;				//所处大厅编号(快速加入)
+	optional int32 ante_type = 2;			//注额大小(开新桌)
+	optional int32 currency_type = 3;		//货币类型
+}
+
+message QuickLoginResponse
+{
+	optional int32 result = 1;								//大于等于0 成功 小于0 失败
+	optional int32 room_id = 2;								//登录房间ID
+	optional string port = 3;								//端口
+	optional string ip = 4;									//ip
+	optional int32 seat_location = 5;						//座位号
+	optional int32 ante_type = 6;							//注额类型
+}
+
+message ChatMessageNotify
+{
+	optional int32 seat_location = 1;
+	optional string name = 2;
+	optional string data = 3;
+}
+
+
+////////////////////////////////////////////////////////////
+//断线重连
+
+message ReconnectInfoRequest
+{
+}
+
+message ReconnectInfoResponse
+{
+	optional int32 result = 1;				//0没有，1有
+	optional int32 room_id = 2;				//房间ID
+	optional int32 seat_location = 3;		//方位
+	optional string ip = 4;					//ip
+	optional string port = 5;				//端口
+	optional int32 ante_type = 6;			//注额类型
+}
+
+message HostOperationNotify
+{
+	optional ChoiceType choice_type = 1;				//操作类型
+	optional MahjongDef mj = 2;							//补牌
+	repeated MahjongDef mj_vec = 3;							//操作的麻将
+}
+
+
+////////////////////////////////////////////////////////////////////
+//日志
+
+message GameLogNotify
+{
+	optional int32 msg_id = 1;
+	optional string table_id = 2;
+	optional string round_id = 3;
+	optional string ante = 4;
+	optional int32 currency = 5;
+	optional int64 start_time = 6;
+	optional int64 end_time = 7;
+	optional string fan = 8;
+	repeated string hu_type = 9;
+	repeated PlayerLog players = 10; 
+	optional string app_id = 11;
+	optional int32 player_count = 12;
+}
+
+message PlayerLog
+{
+	optional int32 uid = 1;
+	optional string chips_before = 2;
+	optional string chips_income = 3;
+	optional string service_cost = 4;
+	optional string result = 5;
+}
+
+///////////////////////////////////////////////////////////////
+//愚蠢至极的通用日志
+
+message HeartBeatNotify
+{
+	optional int32 msg_id = 1 [default=0];
+}
+
+message StartGameLogNotify
+{
+	optional int32 msg_id = 1 [default=1001];
+	optional string app_id = 2 [default = "241d7b34d61b3aea4eb0e3a91d753ecb"];
+	optional int32 currency = 3;
+	optional int32 uid = 4;
+	optional int64 timestamp = 5;
+	
+}
+
+message EndGameLogNotify
+{
+	optional int32 msg_id = 1 [default=1002];
+	optional string app_id = 2 [default = "241d7b34d61b3aea4eb0e3a91d753ecb"];
+	optional int32 currency = 3;
+	optional int32 uid = 4;
+	optional int64 timestamp = 5;
+	optional int64 playtime = 6;
+
+}
+
+message StartRoundNotify
+{
+	optional int32 msg_id = 1 [default=1003];
+	optional string app_id = 2 [default = "241d7b34d61b3aea4eb0e3a91d753ecb"];
+	optional int32 currency = 3;
+	optional int32 uid = 4;
+	optional int64 timestamp = 5;
+	optional string table_id = 6;
+	optional string round_id = 7; 
+	
+}
+
+message EndRoundNotify
+{
+	optional int32 msg_id = 1 [default=1004];
+	optional string app_id = 2 [default = "241d7b34d61b3aea4eb0e3a91d753ecb"];
+	optional int32 currency = 3;
+	optional int32 uid = 4;
+	optional int64 timestamp = 5;
+	optional string table_id = 6;
+	optional string round_id = 7; 
+	optional int64 playtime = 8;
+	
+}
+
+
+message LoginGameLogNotify
+{
+	optional int32 msg_id = 1 [default=1005];
+	optional string app_id = 2 [default = "241d7b34d61b3aea4eb0e3a91d753ecb"];
+	optional int32 uid = 3;
+	optional int64 timestamp = 4;
+	
+}
+
+message LogoutGameLogNotify
+{
+	optional int32 msg_id = 1 [default=1006];
+	optional string app_id = 2 [default = "241d7b34d61b3aea4eb0e3a91d753ecb"];
+	optional int64 playtime = 3;
+	optional int32 uid = 4;
+	optional int64 timestamp = 5;
+	
+}
+
+message OnlineLogNotify
+{
+	optional int32 msg_id = 1 [default=1007];
+	optional string app_id = 2 [default = "241d7b34d61b3aea4eb0e3a91d753ecb"];
+	optional int64 play_count = 3;
+	optional int64 timestamp = 5;
+}
+
+message IncomeLogNotify
+{
+	optional int32 msg_id = 1 [default=1008];
+	optional string app_id = 2 [default = "241d7b34d61b3aea4eb0e3a91d753ecb"];
+	optional string table_id = 3;
+	optional string round_id = 4; 
+	optional int32 currency = 5;
+	optional int32 total_flow = 6;			//	INT		总流水
+	
+	optional int32 total_bet_win = 7;		//	INT		玩家下注收益
+	optional int32 total_jackpot_win = 8;		//	INT		总Jackpot返奖
+	optional int32 total_bonus_win = 9;		//	INT		总Bonus返奖
+	
+	optional int32 total_bet_miss = 10;		//	INT		总下注miss
+	optional int32 total_jackpot_miss = 11;		//	INT		总Jackpot miss
+	optional int32 total_bonus_miss = 12;		//	INT		总Bonus miss
+	
+	optional int32 total_tips = 13;			//	INT		总抽水 (彩金德州为0)
+	optional int32 timestamp = 14;			//	INT		当前时间戳
+	
+}
+
+message SingleIncomeNotify
+{
+	optional int32 msg_id = 1 [default=1009];
+	optional string app_id = 2 [default = "241d7b34d61b3aea4eb0e3a91d753ecb"];
+	optional string table_id = 3;
+	optional string round_id = 4; 
+	optional int32 currency = 5;
+
+	optional int32 bet = 6;				//	INT		流水(玩家下注)
+	optional int32 miss = 7;				//	INT		下注MISS
+	optional int32 win = 8;				//	INT		平台返奖
+
+	optional int32 jackpot_bet = 9;			//	INT		Jackpot 下注
+	optional int32 jackpot_win = 10;			//	INT		Jackpot 返奖
+	optional int32 jackpot_miss = 11;			//	INT		Jackpot Miss金额
+
+	optional int32 tips = 12;				//	INT		抽水 (彩金德州为0)
+	optional int64 timestamp = 13;			//	INT		当前时间戳
+	optional int32 uid = 14;				//cao
+	optional int32 devote = 15;				//贡献
+
+}
+
+/////////////////////////////////////////////////////////////////////////
+//比赛
+
+message LoginMatchRequest
+{
+	optional int32 match_id = 1;						//比赛ID
+}
+
+message LoginMatchResponse
+{
+	optional int32 result = 1;							//登录结果
+	
+}
+
+message MatchSuccessedNotify
+{
+	optional int32 result = 1;							//0 被移出匹配队列
+	optional int32 seat_location = 2;					//座位
+	optional string ip = 3;								//ip地址
+	optional int32 port = 4;							//端口
+	optional int32 room_id = 5;							//房间ID
+}
+
+message UpdateRankRequest
+{
+	optional int32 is_self = 1;							//是否是自己 0 其他n会给前N
+}
+
+message UpdateRankResponse
+{
+	repeated RankInfo rank_info = 1;
+}
+
+message SignUpRequest
+{
+	optional int32 type = 1;
+}
+
+message SignUpResponse
+{
+	optional int32 gold = 1;							//扣除金额
+}
+
+////////////////////////////////////////////////////////////////////
+//新手引导 迫不得已这么做 真是蠢成狗
+
+
+message PlayerInstructionRequest
+{
+	optional int32 amount = 1;							//数量
+	optional string app_id = 2;							//新手引导请求
+	optional int32 finish = 3;							//0 未完成 1完成
+	optional string uid = 4;							//账户
+	optional string app_secret_key = 5;					//app key
+	
+}
+
+message PlayerInstructionResponse
+{
+	optional int32 result = 1;							//结果 0 失败 1 爱咋咋地
+	optional string data = 2;							//结果内容
+}
+
+
+
+
+//消息ID定义
+enum MessageID
+{
+	MSGID_LISTROLE_REQUEST		= 100;	//查询角色数量请求
+	MSGID_LISTROLE_RESPONSE		= 101;  //查询角色数量响应
+	MSGID_DELETEROLE_REQUEST	= 102;  //删除角色请求
+	MSGID_DELETEROLE_RESPONSE	= 103;	//删除角色响应
+	MSGID_CREATEROLE_REQUEST	= 104;  //创建角色请求
+	MSGID_CREATEROLE_RESPONSE	= 105;  //创建角色响应
+	
+	MSGID_LOGIN_REQUEST			= 106;	//登陆请求
+	MSGID_LOGIN_RESPONSE		= 107;	//登陆响应
+	MSGID_LOGIN_NOTIFY			= 108;	//登陆响应
+	MSGID_LOGOUTSERVER_REQUEST	= 109; 	//登出请求
+	MSGID_LOGOUTSERVER_RESPONSE	= 110; 	//登出响应
+	MSGID_LOGOUTSERVER_NOTIFY	= 111;  //登出通知
+	
+	MSGID_FETCHROLE_REQUEST = 112;		//拉去玩家数据
+	MSGID_FETCHROLE_RESPONSE = 113;		//拉去玩家数据
+	MSGID_UPDATEROLE_REQUEST = 114;		//更新玩家数据
+	MSGID_UPDATEROLE_NOTIFY = 115;		//更新玩家数据
+	
+	MSGID_REALNAMECHECK_REQUEST  = 116;	  //实名认证请求
+	MSGID_REALNAMECHECK_RESPONSE = 117;   //实名认证响应
+	MSGID_AASLOGIN_REQUEST = 118;         //防沉迷登录请求
+	MSGID_AASLOGIN_RESPONSE = 119;        //防沉迷登录响应
+	MSGID_AASADDICT_NOTIFY  = 120;		  //防沉迷通知
+	MSGID_AASACTIVE_NOTIFY = 121;		  //防沉迷保活通知
+	
+	MSGID_KICKROLE_WORLD_REQUEST = 122;   //踢人请求
+	MSGID_KICKROLE_WORLD_RESPONSE = 123;  //踢人响应
+	
+	MSGID_APP_STATUS_NOTIFY  = 124;		//app状态上报
+	MSGID_ERROR_CODE_NOTIFY = 125;    //返回错误码
+
+	MSGID_TAKE_OUT_REQUEST = 126;			//带出请求
+	MSGID_TAKE_OUT_RESPONSE = 127;			//带出相应
+	MSGID_TAKE_IN_REQUEST = 128;			//带入请求
+	MSGID_TAKE_IN_RESPONSE = 129;			//带入相应
+	
+	MSGID_REFRESH_TASK_REQUEST = 131;		//刷新任务请求
+	MSGID_REFRESH_TASK_RESPONSE = 132;		//刷新任务响应
+	MSGID_FINISH_TASK_REQUEST = 133;		//完成任务请求
+	MSGID_FINISH_TASK_RESPONSE = 134;		//完成任务响应
+	MSGID_UPDATE_TASK_REQUEST = 135;		//任务更新
+	MSGID_UPDATE_TASK_RESPONSE = 136;		//任务更新响应
+	
+	MSGID_LOGIN_VERIFY_REQUEST = 137;		//登录验证请求
+	MSGID_LOGIN_VERIFY_RESPONSE = 138;		//登录验证相应
+
+	MSGID_TAKEOUT_AMOUNT_REQUEST = 145;		//带出数额请求
+	MSGID_TAKEOUT_AMOUNT_RESPONSE = 146;	//带出数额响应
+
+	MSGID_UPDATE_ROOM_NOTIFY = 147;		//更新房间
+
+	MSGID_ACTION_ALLOWANCE_REQUEST = 148;		//
+
+	MSGID_PLAYER_STATE_NOTIFY = 149;			//战斗服玩家信息更新
+
+	MSGID_LOGOUT_ROOM_NOTIFY = 150;				//退出房间通知
+	MSGID_CHAT_MESSAGE_NOTIFY = 151;				//聊天通知
+	MSGID_PUBLIC_NOTICE_NOTIFY = 152;			//全服公告通知
+
+	MSGID_LOGIN_FIGHT_REQUEST = 153;			//登录战斗服务器
+	MSGID_LOGIN_FIGHT_RESPONSE = 154;			//登录战斗服务器响应
+
+	MSGID_PLAYER_CHOICE_NOTIFY = 156;			//玩家选择反馈
+
+	MSGID_SHUFFERING_NOTIFY = 157;				//发牌通知
+
+	MSGID_HEART_BEAT_REQUEST = 158;				//心跳
+	MSGID_HEART_BEAT_RESPONSE = 159;			//跳跳跳跳
+	MSGID_CALCULATE_NOTIFY = 160;				//结算通知
+	MSGID_ROBOT_LOGIN_REQUEST = 161;			//机器人登录请求
+	MSGID_ROBOT_LOGIN_RESPONSE = 162;			//机器人登陆响应
+
+	MSGID_SHUFFERING_INFO_REQUEST = 163;		//洗牌之后玩家花牌等信息
+	MSGID_SHUFFERING_INFO_RESPONSE = 164;		//洗牌之后剩余消息响应
+
+	MSGID_PLAYER_STATUS_NOTIFY = 165;			//通知CA改变玩家状态
+
+	MSGID_RECONNECT_INFO_REQUEST = 166;			//断线重连消息请求
+	MSGID_RECONNECT_INFO_RESPONSE = 167;		//短线重连消息响应
+
+	MSGID_QUICK_LOGIN_REQUEST = 168;			//快速加入开桌
+	MSGID_QUICK_LOGIN_RESPONSE = 169;			//快速加入开桌响应
+
+	MSGID_GAME_LOG_NOTIFY = 170;				//日志上报
+
+	MSGID_ROBOT_TAKE_IN_REQUEST = 171;			//机器人带入
+	MSGID_ROBOT_TAKE_IN_RESPONSE = 172;			//
+	MSGID_ROBOT_TAKE_OUT_NOTIFY = 173;			//带出
+
+	MSGID_HOST_OPERATION_NOTIFY = 174;			//代打通知
+	MSGID_PLAYER_INSTRUCTION_REQUEST = 175;		//新手引导完成请求
+	MSGID_PLAYER_INSTRUCTION_RESPONSE = 176;	//新手引导完成响应
+	MSGID_STOP_SERVER_NOTIFY = 177;				//停服通知
+	MSGID_DISSOLVE_ROOM_NOTIFY = 178;			//牌桌解散
+
+	MSGID_LIST_ROOM_REQUEST = 207;				//请求房间列表
+	MSGID_LIST_ROOM_RESPONSE = 208;				//房间列表相应
+	MSGID_LOGIN_ROOM_REQUEST = 209;				//进入房间请求
+	MSGID_LOGIN_ROOM_RESPONSE = 210;			//进入房间相应
+	MSGID_LOGOUT_ROOM_REQUEST = 211;			//登出房间请求
+	MSGID_LOGOUT_ROOM_RESPONSE = 212;			//登出房间响应
+
+	MSGID_PLAYER_READY_REQUEST = 213;			//准备
+	MSGID_PLAYER_READY_RESPONSE = 214;			//准备回馈
+
+	MSGID_PLAYER_CHOICE_REQUEST = 215;			//玩家行为广播
+	MSGID_PLAYER_CHOICE_RESPONSE = 216;			//玩家选择
+	MSGID_PLAYER_LOGIN_NOTIFY = 217;			//新玩家进入
+	MSGID_PLAYER_LOGOUT_REQUEST = 218;			//登出请求
+	MSGID_PLAYER_LOGOUT_RESPONSE = 219;			//登出响应
+	
+	//排行榜
+	MSGID_LOGIN_MATCH_REQUEST = 220;			//加入比赛
+	MSGID_LOGIN_MATCH_RESPONSE = 221;			//反馈
+
+	MSGID_MATCH_SUCCESSED_NOTIFY = 222;			//匹配成功
+
+	MSGID_UPDATE_RANK_REQUEST = 223;			//更细排行榜
+	MSGID_UPDATE_RANK_RESPONSE = 224;			//反馈
+
+	MSGID_SIGNUP_REQUEST = 225;					//比赛登记
+	MSGID_SIGNUP_RESPONSE = 226;				//反馈
+
+	MSGID_UPDATE_RANK_NOTIFY = 227;				//通知缓存更新排行榜
+
+	MSGID_SELECT_RANKINFO_REQUEST = 228;		//向缓存查询排行
+	MSGID_SELECT_RANKINFO_RESPONSE = 229;		//反馈
+
+	MSGID_DROP_RANK_NOTIFY = 230;				//清空排行榜
+
+	MSGID_QUERY_RANK_REQUEST = 231;				//查询个人排行榜
+	MSGID_QUERY_RANK_RESPONSE = 232;			//查询个人排行响应
+	//OSS日志请求
+	MSGID_LOGIN_INFO_NOTIFY = 233;				//登录信息记录
+	MSGID_ROBOT_OPEN_TABLE_NOTIFY = 234;		//机器人开桌
+
+	//服务器消息同步
+	MSGID_ROOM_LIST_SYNCHRONIZE_REQUEST = 235;	//房间列表信息同步
+	MSGID_OFFLINE_CASHING_NOTIFY = 236;			//离线玩家牌局结束信息通知
+	
+	
+}
+
+//登陆账号平台
+enum LoginPlatform
+{
+	LOGIN_PLATFORM_IOS			= 0;	//ios
+	LOGIN_PLATFORM_ANDRIOD		= 1;	//andriod
+}
+
+//消息定义
+message LotillMsg
+{
+	//消息头
+
+	required int32			msgid = 1;				//消息ID
+	optional int32			uin = 2;				//角色id，游戏内使用
+	optional string			account = 3;			//登陆账号
+	optional int32			feed_back = 4;			//反馈
+	optional int64			time_stamp = 5;			//时间戳
+	optional LoginPlatform	platform = 6;			//平台
+	optional string			client_debug_info = 7;  //客户端调试信息  
+	optional string			name = 8;				//名字
+	optional int32			room_id = 9;			//房间id
+	optional int64			round_id = 10;			//局ID
+	optional string			head_icon = 11;			//头像
+	optional string			extra = 12;				//平台拓展
+	//消息体
+
+	optional ListRoleRequest		list_role_request = 21;					//查询角色数量请求
+	optional ListRoleResponse		list_role_response = 22;				//查询角色数量响应
+	optional CreateRoleRequest		create_role_request = 23;				//查询角色数量请求
+	optional CreateRoleResponse		create_role_response = 24;				//查询角色数量响应
+	
+	optional LoginRequest			login_request = 25;						//登陆请求
+	optional LoginResponse			login_response = 26;					//登陆响应
+	optional LoginNotify			login_notify = 27;						//登陆通知
+	
+	optional FetchRoleRequest		fetch_role_request = 28;				//拉去玩家数据请求
+	optional FetchRoleResponse		fetch_role_response = 29;				//拉去玩家数据响应
+	optional UpdateRoleNotify		update_role_notify = 30;				//拉去玩家数据响应
+	
+	optional KickRoleRequest		kick_role_request = 31;					//踢人请求
+	optional KickRoleResponse		kick_role_response = 32;				//踢人响应
+	optional LogoutRequest			logout_request = 33;					//登出请求
+	optional LogoutResponse			logout_response = 34;					//登出响应
+	optional LogoutNotify			logout_notify = 35;						//登出通知
+	optional UpdateAppPortNotify	updateappport_notify = 36;					//App上报端口
+	optional ErrorCodeNotify		errorcode_notify = 37;					//服务器返回错误码
+
+	optional CashTakeOutRequest			cash_take_out_request = 38;				//现金带出请求
+	optional CashTakeOutResponse		cash_take_out_response = 39;				//现金带出响应
+	optional CashTakeInRequest			cash_take_in_request = 40;				//带入请求
+	optional CashTakeInResponse			cash_take_in_response = 41;				//带入相应
+	optional LoginVerifyResponse		login_verify_response = 42;				//登录验证
+
+	optional LoginFightRequest			login_fight_request = 43;				//登录战斗服
+	optional LoginFightResponse			login_fight_response = 44;				//登录战斗服返回
+
+
+	optional ListRoomRequest					list_room_request = 45;				//列出房间	
+	optional ListRoomResponse					list_room_response = 46;				//列出房间相应
+	optional LoginRoomRequest					login_room_request = 47;				//进入桌子
+	optional LoginRoomResponse					login_room_response = 48;				//进入桌子相应
+	optional LogoutRoomRequest					logout_room_request = 49;			//登出桌子
+	optional LogoutRoomResponse					logout_room_response = 50;			//登出桌子相应
+
+	optional UpdateRoomNotify					update_room_notify = 51;				//通知游戏服务器移除房间
+	optional UploadRoomNotify					upload_room_notify = 52;				//向游戏服务器上报房间信息
+	optional TakeOutAmountRequest				take_out_amount_request = 53;			//带出数额请求
+	optional TakeOutAmountResponse				take_out_amount_response = 54;			//逻辑服务器返回带出数额
+	optional PublicNoticeNotify					public_notice_notify = 55;				//全服公告通知
+
+	optional PlayerReadyRequest					player_ready_request = 56;				//准备
+	optional PlayerReadyResponse				player_ready_response = 57;			//准备反馈
+	optional PlayerChoiceNotify					player_choice_notify = 58;				//玩家行为广播
+	optional PlayerChoiceRequest				player_choice_request = 59;				//玩家操作
+	optional PlayerChoiceResponse				player_choice_response = 60;			//玩家操作相应
+
+	optional ShufferingNotify					shuffering_notify = 61;				//洗牌通知
+	optional HeartBeatRequest					heart_beat_request = 62;				//心跳
+	optional HeartBeatResponse					heart_beat_response = 63;				//跳TM的
+	optional CalculateNotify					calculate_notify = 64;					//结算通知
+	optional PlayerLoginNotify					player_login_notify = 65;				//战斗服玩家登陆通知
+
+	optional QuickLoginRequest					quick_login_request = 66;			//登出请求
+	optional QuickLoginResponse					quick_login_response = 67;			//等出响应
+	optional RobotLoginRequest					robot_login_request = 68;
+	optional RobotLoginResponse					robot_login_response = 69;
+
+	optional ShufferingInfoRequest				shuffering_info_request = 70;
+	optional ShufferingInfoResponse				shuffering_info_response = 71;
+
+	optional PlayerStatusNotify					player_status_notify = 72;
+
+	optional ReconnectInfoRequest				reconnect_info_request = 73;			//断线重连
+	optional ReconnectInfoResponse				reconnect_info_response = 74;			//重连响应
+
+	optional GameLogNotify						game_log_notify = 75;					//日志上报
+
+	optional HeartBeatNotify					heart_beat_notify = 76;				//心跳跳平台的
+	optional StartGameLogNotify					start_game_log_notify = 77;			
+	optional EndGameLogNotify					end_game_log_notify = 78;
+	optional StartRoundNotify					start_round_log_notify = 79;
+	optional EndRoundNotify						end_round_log_notify = 80;
+	optional LoginGameLogNotify					login_game_log_notify = 81;
+	optional LogoutGameLogNotify				logout_game_log_notify = 82;
+	optional OnlineLogNotify					online_game_log_notify = 83;
+	optional IncomeLogNotify					income_game_log_notify = 84;
+	optional SingleIncomeNotify					single_income_log_notify = 85;
+
+	optional PlayerStateNotify					player_state_notify = 86;					//玩家信息更新
+	optional LogoutRoomNotify					logout_room_notify = 87;					//退出房间通知
+
+	optional ChatMessageNotify					chat_message_notfiy = 88;					//聊天
+
+	optional LoginMatchRequest					login_match_request = 89;					//加入比赛
+	optional LoginMatchResponse					login_match_response = 90;					//登录比赛响应
+	optional MatchSuccessedNotify				match_successed_notify = 91;				//比赛匹配通知
+	optional UpdateRankRequest					update_rank_request = 92;					//更新排行榜
+	optional UpdateRankResponse					update_rank_response = 93;
+	optional SignUpRequest						sign_up_request = 94;						//登记
+	optional SignUpResponse						sign_up_response = 95;						//响应
+	optional UpdateRankNotify					update_rank_notify = 96;				//更新排行榜
+	optional SelectRankInfoRequest				select_rankinfo_request = 97;				//查询排行榜
+	optional SelectRankInfoResponse				select_rankinfo_response = 98;				//查询排行榜
+
+	optional DropRankNotify						drop_rank_notify = 99;				//清空排行榜
+	optional QueryRankRequest					query_rank_request = 100;					//查询某人排名
+	optional QueryRankResponse					query_rank_response = 101;					//查询排行响应
+
+	optional LoginInfoNotify					login_info_notify = 102;				//登录信息通知
+	
+	optional RobotTakeInRequest					robot_take_in_request = 103;			//机器人带入
+	optional RobotTakeInResponse				robot_take_in_response = 104;			//机器人带入响应
+	optional RobotTakeOutNotify					robot_take_out_notify = 105;			//机器人带出
+
+	optional HostOperationNotify				host_operation_notify = 106;			//服务器代打
+	optional PlayerInstructionRequest			player_instruction_request = 107;		//新手引导
+	optional PlayerInstructionResponse			player_instruction_response = 108;		//CTMD新手引导
+
+	optional StopServerNotify					stop_server_notify = 109;				//停服通告
+	optional DissolveRoomNotify					dissolve_room_notify = 110;				//解散牌桌
+
+	optional RoomListHttpRequest				room_list_http_request = 111;			//平台请求房间信息部分
+	optional RoomListHttpRespnse				room_list_http_response = 112;
+	optional TableHttpRequest					table_http_request = 113;
+	optional TableHttpResponse					table_http_response = 114;
+	optional RobotOpenTableNotify				robot_open_table_notify = 115;
+	
+	optional RoomListSynchronizeRequest			room_list_synchronizeRequest = 116;		//fight和ca之间的房间列表同步
+	optional OfflineCashingNotify				offline_cashing_notify = 117;			//fight和ca之间的离线玩家牌局结束信息通知
+	
+}
+
+// my field options
+message MyFieldOptions
+{
+	optional string strColName = 1;
+	optional string strRefColName = 2;
+	optional bool bNotNull = 3;
+	optional bool bAutoIncrement = 4;
+	optional uint32 u32Version = 5;
+	optional uint32 uStrSize = 6;
+}
+
+// my message options
+message MyMsgOptions
+{
+	optional string strSortKey = 1;
+	optional bool bDatabase = 2 [default = false];
+	optional bool bTable = 3 [default = false];
+	optional string strPrimaryKey = 4;
+	optional int32 i32SplitTableFactor = 5 [default = 1];
+	optional string strKey = 6;
+	optional string strEngine = 7 [default = "INNODB"];
+	optional string strCharset = 8 [default = "utf8"];
+	optional string strUniqueIndex = 9;
+}
+
+
+
+enum Available
+{
+	AVAILABLE_NORMAL = 1;  //正常状态
+	AVAILABLE_BAN = 2;     //禁言
+	AVAILABLE_CLOSE = 3;   //封号
+	AVAILABLE_DELETE = 4;   //删号
+}
+
+enum Macros
+{
+	MAX_NAME_LEN = 64;	    //名字长度
+	MAX_ACCOUNT_LEN = 32;  //账号长度
+}
+
+//角色扩展信息
+message DBRoleInfoExtend
+{
+	repeated Item	bag = 1;						//背包
+	repeated int32  title_list = 2;	                //获得称号
+	repeated int32  buff_list = 3;					//buff
+	optional int32	camp = 4;                     //阵营
+	repeated TaskInfo   task_list = 6;					//任务列表
+	optional int32    task_finished_num = 7;			//任务完成数
+	optional uint32	 last_update_hp_time = 8;			//首次体力不足上限的时间
+	optional int32 guest = 10;							//0正常1游客
+	repeated int32 finished_task_list = 11;				//完成任务列表
+	optional int32 task_refresh_times = 12;				 //任务刷新次数
+	
+	
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//踢人
+
+//踢人原因
+enum KickRoleResean
+{
+	KICKROLE_FOR_LOGIN = 0;
+	KICKROLE_FOR_LOGOUT= 1;
+}
+
+//踢人请求
+message KickRoleRequest
+{
+	optional uint32	uin = 1;		//角色ID
+	optional KickRoleResean  reason = 2;		//登出原因，0登录踢人
+	optional uint32	appid = 3;		//请求踢人app服务器ID
+}
+
+//踢人响应
+message KickRoleResponse
+{
+	optional int32 result = 1;		//结果，0表示成功，其他出错
+	optional uint32	uin = 2;		//角色ID
+	optional KickRoleResean  reason = 3;		//登出原因
+	optional uint32	appid = 4;		//请求踢人app服务器ID
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//数据拉取、更新
+
+//拉取原因
+enum FetchRoleResean
+{
+	FETCHROLE_FOR_LOGIN = 0;
+	FETCHROLE_FOR_DATA = 1;
+}
+
+//拉取角色请求
+message FetchRoleRequest
+{
+	optional uint32				uin = 1;		//角色ID
+	optional FetchRoleResean	reason = 2;		//拉取角色原因, 0登录拉去数据
+}
+
+//拉取角色响应
+message FetchRoleResponse
+{
+	optional int32				result = 1;			//结果，0表示成功，其他出错
+	optional FetchRoleResean	reason = 2;			//拉取角色原因
+	
+}
+
+//更新原因
+enum UpdateRoleResean
+{
+	UPDATEROLE_ON_TICK = 0;
+	UPDATEROLE_ON_LOGOUT = 1;
+	UPDATEROLE_ON_USER = 2;
+}
+
+//更新角色数据通知
+message UpdateRoleNotify
+{
+	optional int32	reason = 1;			//更新角色原因
+	
+}
+
+message UpdateAppPortNotify
+{
+	optional string ip = 1;		//app服务器IP
+	optional int32 port = 2;	//app服务器端口
+	optional int32  playerNum = 3; 		//服务器人数
+	optional int32	appid	= 4;	//app服务器id
+}
+
+message LoginVerifyResponse
+{
+	optional int32 result = 1;				//0验证成功-1失败
+}
+
+////////////////////////////Oss日志统计////////////////////////////
+
+message LoginInfoNotify
+{
+	optional int32 uin = 1;						//uin
+	optional uint32 logintime = 2;				//登录时间
+}
+
+message UpdateRoomNotify
+{
+	optional uint32 table_id = 1;				//房间id
+	optional uint32 uin = 2;					//uin为0就干掉整个room，不为0就干掉这个玩家
+	optional int32 type = 3;					//0 进人 1 出人
+	optional int32 room_type = 4;					//房间类型
+}
+
+message UploadRoomNotify
+{
+	repeated RoomList room_list = 1;						//房间列表
+}
+
+message TakeOutAmountRequest
+{
+}
+
+message TakeOutAmountResponse
+{
+	optional string currency = 1;
+	optional string amount = 2;
+}
+
+message RobotLoginRequest
+{
+	optional int32 room_id = 1;				//room_id
+}
+
+message RobotLoginResponse
+{
+	optional int32 result = 1;				//0 成功
+	optional int32 room_id = 2;				//room_id
+	optional int32 uid = 3;					//uid
+	optional string head_coin = 4;			//头像
+	optional string name = 5;				//名字
+}
+
+message RobotTakeInRequest
+{
+	optional string uid = 1;
+	optional string currency = 2;
+	optional string amount = 3;
+	optional string app_id = 4;
+}
+
+message RobotTakeInResponse
+{
+	optional int32 uid = 1;
+	optional int32 room_id = 2;
+	optional int32 amount = 3;
+	optional int32 left = 4;
+	optional int32 currency_type = 5;
+	optional int32 result = 6;
+	
+}
+
+message RobotTakeOutNotify
+{
+	optional string uid = 1;
+	optional string currency = 2;
+	optional string amount = 3;
+	optional string app_id = 4;
+}
+
+message PlayerStatusNotify
+{
+	optional int32 uin = 1;					//uin
+	optional int32 room_id = 2;				//房间id
+	optional int32 status = 3;				//玩家状态
+	optional int32 seat_location = 4;		//座位
+}
+
+message StopServerNotify
+{
+	optional int32 data = 1;					//0 关服 1 停服
+}
+
+message RobotOpenTableNotify
+{
+	optional int32 room_id = 1;
+	optional int32 seate_location = 2;
+	optional int32 ante_type = 3;
+	optional string head_icon = 4;
+	optional string name = 5;
+	optional string uid = 6;
+}
+
+///////////////////////////////////////////////////////////////
+//排行榜
+message UpdateRankNotify
+{
+	optional int32 uin = 1;					//uin
+	optional int32 score = 2;				//分数
+}
+
+message SelectRankInfoRequest
+{
+	optional int32 uin = 1;					//uin
+}
+
+message SelectRankInfoResponse
+{
+	repeated RankInfo rank_info = 1;				//排行榜
+}
+
+message DropRankNotify
+{
+	
+}
+
+message QueryRankRequest
+{
+	optional int32 uin = 1;							//uin
+}
+
+message QueryRankResponse
+{
+	optional int32 uin = 1;
+	optional int32 rank = 2;						//排名
+}
+
+
+
+message UploadMatchResult
+{
+	optional string app_id = 1;						//appid
+	optional int32 match_id = 2;					//比赛ID
+	optional string match_name = 3;
+	optional string match_type = 4;                  //match_type为MTT/SNG
+	optional int32 match_state = 5;			//到时候这里只会有一种状态，即“已结束”
+	optional int64 start_time = 6;
+	optional int64 end_time = 7;
+	optional string recycle_type = 8 [default = "none"];
+	optional string currency = 9;
+	optional int32 player_num = 10;
+	optional int32 sum_entry_fees = 11;
+	optional int32 entry_item = 12;
+	optional int32 sum_items = 13;
+	optional int32 sum_service_fees = 14;
+	optional int32 rebuy = 15;
+	optional int32 addon = 16;
+	optional int32 blind_level = 17;
+	optional int32 prize_pool = 18;
+	optional int32 money_cycle_num = 19;    
+	optional int32 need_check_award = 20;
+	repeated MatchResult results = 21;
+}
+
+message RoomDef
+{
+	optional int32 room_type = 1;
+	optional int32 min_ante = 2;
+	optional int32 max_ante = 3;
+}
+
+message RoomInfoDef
+{
+	optional int32 room_id = 1;
+	optional int32 max_count = 2[default = 2];
+	optional int32 cur_count = 3;
+}
+
+message RoomListHttpRequest
+{
+	optional string oper_type = 1;
+	optional string currency = 2;
+}
+
+message RoomListHttpRespnse
+{
+	optional string oper_type = 1 [default = "RoomList"];
+	optional string currency = 2;
+	repeated RoomDef Room = 3; 			
+}
+
+message TableHttpRequest
+{
+	optional string oper_type = 1;
+	optional int32 room_type = 2;
+}
+
+message TableHttpResponse
+{
+	optional string oper_type = 1 [default = "RoomInfo"];
+	optional int32 room_type = 2;
+	repeated RoomInfoDef RoomInfo = 3;
+}
+
+///////////////////////////////////////////////////////////////
+//房间信息同步
+
+message RoomListSynchronizeRequest
+{
+	repeated RoomMinState room_min_state = 1;					//大厅房间最简状况
+}
+
+message OfflineCashingNotify
+{
+	optional int32 uid = 1;										//玩家uid
+	optional int64 time = 2;									//结算时间uinx时间戳
+	optional string round_id = 3;								//牌局id
+	optional int32 currency = 4;								//货币种类
+	optional int32 sum = 5;										//结算金额
+}
